@@ -16,9 +16,9 @@ def get_soup(url,header):
 
 def main(args):
     parser = argparse.ArgumentParser(description='Scrape Google images')
-    parser.add_argument('-s', '--search', default='bananas', type=str, help='search term')
-    parser.add_argument('-n', '--num_images', default=10, type=int, help='num images to save')
-    parser.add_argument('-d', '--directory', default='/Users/gene/Downloads/', type=str, help='save directory')
+    parser.add_argument('-s', '--search', default='people', type=str, help='search term')
+    parser.add_argument('-n', '--num_images', default=50, type=int, help='num images to save')
+    parser.add_argument('-d', '--directory', default='../images/', type=str, help='save directory')
     parser.add_argument('-f','--filter', default='isz:m,itp:photo,ic:trans,ift:png', type=str,help='filter string from google advanced search tbs param')
     args = parser.parse_args()
     query = args.search#raw_input(args.search)
@@ -37,10 +37,15 @@ def main(args):
        'Connection': 'keep-alive'}
 
     soup = get_soup(url,header)
-    ActualImages=[]# contains the link for Large original images, type of  image
+    ActualImages=[]
+
+    print("loading images...")
     for a in soup.find_all("div",{"class":"rg_meta"}):
         link , Type =json.loads(a.text)["ou"]  ,json.loads(a.text)["ity"]
-    ActualImages.append((link,Type))
+        ActualImages.append((link,Type))
+        print(len(ActualImages))
+
+    print("images found: " + str(len(ActualImages)))
     for i , (img , Type) in enumerate( ActualImages[0:max_images]):
         try:
             req = urllib.request.Request(img, headers=header)
