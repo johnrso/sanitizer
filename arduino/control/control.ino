@@ -1,5 +1,5 @@
 // rough draft of a state machine to control the hand sanitization process.
-
+// to do: connect to a 
 #include <HardwareSerial.h>
 
 int NUM_SOLENOIDS = 3; // number of solenoid pins, make sure this = length of SOLENOIDS 
