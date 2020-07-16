@@ -1,0 +1,7 @@
+name: deeplab
+channels:
+  - defaults
+dependencies:
+  - python==3.7.4
+prefix: C:\Users\john\.conda\envs\deeplab
+
