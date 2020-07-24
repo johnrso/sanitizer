@@ -1,0 +1,11 @@
+name: deeplab
+channels:
+  - defaults
+dependencies:
+  - pillow
+  - python==3.7.4
+  - tensorflow==1.15
+  - tqdm
+  - numpy
+prefix: /home/john/anaconda3/envs/deeplab
+
