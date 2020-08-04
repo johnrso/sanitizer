@@ -2,6 +2,24 @@
 // to do: connect to a 
 #include <HardwareSerial.h>
 
+
+
+// MOTOR PINS
+
+int DISP_EN = 11;
+int DISP1 = 12;
+int DISP2 = 13;
+
+// SENSOR PINS
+
+int US_TRIG = 9;
+int US_ECHO = 8;
+float US_FLAG = 1000;
+
+// CONTEOL PINS
+
+float duration, distance; //for ultrasonic sensing
+
 int NUM_SOLENOIDS = 3; // number of solenoid pins, make sure this = length of SOLENOIDS 
 int NUM_DISP = 3; // number of dispensers, make sure this = length of DISPS
 
@@ -28,9 +46,20 @@ unsigned long currentTime; // variable for pseudo-threading
 
 void debugPrint(); // debug print statement
 
+
 void setup() {
-  Serial.begin(57600); // communication through serial port
-  
+  // SERIAL SETUP
+  Serial.begin(9600); // communication through serial port
+
+  // MOTOR SETUP
+  pinMode(DISP_EN, OUTPUT);
+  pinMode(DISP1, OUTPUT);
+  pinMode(DISP2, OUTPUT);
+
+  //SENSOR SETUP
+  pinMode(US_TRIG, OUTPUT);
+  pinMode(US_ECHO, INPUT);
+ 
   solenoidStates = (int *)calloc(sizeof(int), NUM_SOLENOIDS);
   levelReadings = (int *)calloc(sizeof(float), NUM_DISP);
   
@@ -50,9 +79,25 @@ void setup() {
 
 void loop() {
   delay(50); // ensure that current time is not 0
+
+  analogWrite(DISP_EN, 255);
   
   while(currentTime = millis()) {
-  
+
+    // get ultrasonic reading
+    digitalWrite(US_TRIG, LOW); 
+    delayMicroseconds(2); 
+    digitalWrite(US_TRIG, HIGH); 
+    delayMicroseconds(10); 
+    digitalWrite(US_TRIG, LOW);
+
+    duration = pulseIn(US_ECHO, HIGH);
+
+    if (duration > US_FLAG) {
+      digitalWrite(DISP1, HIGH);
+      digitalWrite(DISP2, LOW);
+    }
+
     if (genStatus) { // if generator on
       if ((currentTime - genOn) >= GENERATION_TIME) {
         lastGeneration = currentTime;
